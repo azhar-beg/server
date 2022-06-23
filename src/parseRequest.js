@@ -13,7 +13,7 @@ const splitHeader = line => {
 const parseHeaders = lines => {
   const headers = {};
   let index = 0;
-  while (lines.length > index && lines.length) {
+  while (lines.length > index && lines[index].length) {
     const [header, value] = splitHeader(lines[index]);
     headers[header] = value;
     index++;
@@ -27,4 +27,4 @@ const parseRequest = (lines) => {
   return { method, uri, httpVersion, headers };
 };
 
-module.exports = { parseRequest };
+module.exports = { parseRequest, parseHeaders };

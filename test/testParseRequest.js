@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { parseRequest } = require('../src/parseRequest.js');
+const { parseRequest, parseHeaders } = require('../src/parseRequest.js');
 
 describe('parseRequest', () => {
   it('should pass given request', () => {
@@ -23,5 +23,13 @@ describe('parseRequest', () => {
       },
     }
     assert.deepStrictEqual(parseRequest(input), expected);
+  });
+});
+
+describe('parseHeaders', () => {
+  it('should parse the given headers', () => {
+    const input = ['Host: localhost: 8111', 'User-agent: google'];
+    const expected = { host: 'localhost: 8111', 'user-agent': 'google' };
+    assert.deepStrictEqual(parseHeaders(input), expected);
   });
 });
