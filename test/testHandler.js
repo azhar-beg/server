@@ -14,9 +14,9 @@ describe('handleReq', () => {
     const socket = mockSocket(actual);
     const response = new Response(socket);
     const expected = ['HTTP/1.1 200 ok\r\n',
-      'content-length:33\r\n',
+      'content-length:47\r\n',
       '\r\n',
-      '<html><body>Welcome</body></html>'];
+      '<html><body>Welcome to stock page</body></html>'];
 
     serveHomePage({
       uri: '/'
