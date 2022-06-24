@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { handleReq } = require('../src/handlers.js');
+const { serveHomePage } = require('../src/handlers.js');
 const { Response } = require('../src/response.js');
 
 const mockSocket = function (actual) {
@@ -18,23 +18,20 @@ describe('handleReq', () => {
       '\r\n',
       '<html><body>Welcome</body></html>'];
 
-    handleReq(response, {
+    serveHomePage({
       uri: '/'
-    });
+    }, response);
     assert.deepStrictEqual(actual, expected)
   });
+
   it('Should handle given request for wrong url', () => {
     const actual = [];
     const socket = mockSocket(actual);
     const response = new Response(socket);
-    const expected = ['HTTP/1.1 404 not found\r\n',
-      'content-length:37\r\n',
-      '\r\n',
-      `<html><body>Bad Request</body></html>`];
-
-    handleReq(response, {
+    const expected = [];
+    serveHomePage({
       uri: '/index.html'
-    });
+    }, response);
     assert.deepStrictEqual(actual, expected)
   });
 });

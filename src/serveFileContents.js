@@ -1,36 +1,28 @@
 const fs = require('fs');
-const html = content => `<html><body>${content}</body></html>`;
 
 const determineType = (fileName) => {
   const index = fileName.lastIndexOf('.');
   const suffix = fileName.slice(index + 1);
-
   if (suffix === 'html') {
-    return 'html';
+    return 'text/html';
   }
-
   if (suffix === 'jpg') {
-    return 'jpg';
+    return 'image/jpg';
   }
 };
 
-const serveFileContent = function (response, request) {
-  const { uri } = request;
-  let fileName = './public' + uri;
+const serveFileContent = function (request, response) {
+  const fileName = request.uri === '/' ? '/index.html' : request.uri;
+  const path = `./public${fileName}`;
 
-  if (uri === '/') {
-    response.setHeaders('content-type', 'html')
-    fileName = './public/index.html';
+  if (!fs.existsSync(path)) {
+    return false;
   }
 
-  if (fs.existsSync(fileName)) {
-    const content = fs.readFileSync(fileName);
-    response.setHeaders('content-type', determineType(fileName));
-    response.send(content);
-    return;
-  }
-  response.statusCode = 404;
-  response.send(html('Bad Request'));
+  const content = fs.readFileSync(path);
+  response.setHeaders('content-type', determineType(path));
+  response.send(content);
+  return true;
 };
 
 module.exports = { serveFileContent };

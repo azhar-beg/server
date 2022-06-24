@@ -1,4 +1,10 @@
-const { serveFileContent } = require('./src/serveFileContents.js');
-const { startServer } = require('./src/server');
+const { createServer } = require('net');
+const { reqHandler } = require('./src/createReqHandler');
+const { onNewConnection } = require('./src/server');
 
-startServer(8111, serveFileContent);
+const startServer = function (PORT, requestHandler) {
+  const server = createServer((socket) => onNewConnection(socket, requestHandler));
+  server.listen(PORT, () => console.log(`listening on http://localhost:${PORT}`));
+};
+
+startServer(8111, reqHandler);
