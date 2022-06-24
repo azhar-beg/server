@@ -1,24 +1,54 @@
-const response = (content, code) => `HTTP/1.1 ${code}\r\n\r\n${content}\r\n`;
+const EOL = '\r\n';
+const errorMessage = {
+  200: 'ok',
+  404: 'not found',
+};
 
 class Response {
   #socket;
   #statusCode;
+  #headers;
   constructor(socket) {
     this.#socket = socket;
     this.#statusCode = 200;
+    this.#headers = {};
   }
 
   set statusCode(code) {
     this.#statusCode = code;
   }
 
-  write(content) {
+  getErrorMessage() {
+    const message = errorMessage[this.#statusCode];
+    return message;
+  }
+
+  #response() {
+    const code = this.#statusCode;
+    return `HTTP/1.1 ${code} ${this.getErrorMessage()}${EOL}`;
+  }
+
+  #write(content) {
     this.#socket.write(content);
-    this.#socket.end();
+  }
+
+  setHeaders(key, value) {
+    this.#headers[key] = value;
+  }
+
+  #writeHeaders() {
+    Object.entries(this.#headers).forEach(header => {
+      this.#write(header[0] + ':' + header[1] + EOL);
+    })
   }
 
   send(content) {
-    this.#socket.write(response(content, this.#statusCode));
+    this.#write(this.#response());
+    this.setHeaders('content-length', content.length);
+    this.#writeHeaders();
+    this.#write(EOL);
+    this.#write(content);
+    this.#socket.end();
   }
 }
 

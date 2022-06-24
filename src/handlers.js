@@ -9,4 +9,4 @@ const handleReq = function (response, request) {
   response.send(html('Bad Request'));
 };
 
-exports.handler = handleReq;
+module.exports = { handleReq };
