@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { EventEmitter } = require('events');
-const { onNewConnection } = require('../src/server');
+const { onNewConnection } = require('../src/onConnection.js');
 
 describe('onNewConnection', () => {
   it('Should serve content according to request', () => {

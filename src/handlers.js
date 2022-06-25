@@ -12,17 +12,18 @@ const serveHomePage = function (request, response) {
   return false;
 };
 
-const readStock = () => {
-  const stocksReading = JSON.parse(fs.readFileSync('./src/stocks.json', 'utf8'));
-  const stocks = new Stocks();
-  stocksReading.forEach((s) => {
-    stocks.addStock(s.name, s.price, 200);
-  });
-  return stocks;
-}
 const addStock = (stocks) => (request, response) => {
   request.stocks = stocks;
   return false;
+}
+
+const readStock = () => {
+  const listedStocks = JSON.parse(fs.readFileSync('./src/stocks.json', 'utf8'));
+  const stocks = new Stocks();
+  listedStocks.forEach((stock) => {
+    stocks.addStock(stock);
+  });
+  return stocks;
 }
 
 const serveStockPage = (request, response) => {
@@ -35,4 +36,4 @@ const serveStockPage = (request, response) => {
   return false;
 };
 
-module.exports = { addStock, serveHomePage, serveStockPage };
+module.exports = { addStock, readStock, serveHomePage, serveStockPage };

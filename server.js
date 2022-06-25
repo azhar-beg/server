@@ -1,6 +1,6 @@
 const { createServer } = require('net');
 const { reqHandler } = require('./src/createReqHandler');
-const { onNewConnection } = require('./src/server');
+const { onNewConnection } = require('./src/onConnection.js');
 
 const startServer = function (PORT, requestHandler) {
   const server = createServer((socket) => onNewConnection(socket, requestHandler));

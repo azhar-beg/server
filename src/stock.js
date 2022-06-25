@@ -1,35 +1,41 @@
 const between = (min, max) => Math.random() * (max - min) + min;
+const randNth = (possibilities) => possibilities[Math.floor(Math.random() * possibilities.length)];
+const percentageDifference = (num1, num2) => {
+  const diff = num2 - num1;
+  return ((diff / num1) * 100).toFixed(3);
+}
 
-// class Stock {
-//   constructor(name, price, delta)
-// }
+
+const next = (model, current) => {
+  const possibilities = model[current];
+  return randNth(possibilities);
+}
 
 class Stocks {
   #stocks
   constructor() {
-    this.#stocks = [];
+    this.#stocks = {};
   }
 
-  addStock(name, price, delta) {
-    const stock = {};
-    stock.name = name;
-    stock.price = price;
-    stock.delta = delta;
-    this.#stocks.push(stock);
-  }
-
-  #currentPrice({ price, delta }) {
-    return price + +between(-delta, +delta).toFixed(3);
+  addStock(stock) {
+    this.#stocks[stock.name] = stock;
   }
 
   isListed(stockName) {
-    return this.#stocks.some(({ name }) => name === stockName);
+    return this.#stocks[stockName];
   }
 
-  stockDetails(stockName) {
-    const stock = this.#stocks.find(({ name }) => name === stockName);
-    const price = this.#currentPrice(stock)
-    return `name: ${stockName}\nprice: ${price}`;
+  #updateStock(stock, price) {
+    stock.price = price;
+  }
+
+  stockDetails(name) {
+    const stock = this.#stocks[name]
+    const { price, delta, opening } = stock;
+    const current = next(delta, price)
+    this.#updateStock(stock, current);
+    const change = percentageDifference(opening, current);
+    return `name: ${name}\nopening price: ${opening}\nprice: ${current}\nchange: ${change}`;
   }
 }
 
