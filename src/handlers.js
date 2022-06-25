@@ -1,3 +1,6 @@
+const { Stocks } = require("./stock.js");
+const fs = require('fs');
+
 const html = content => `<html><body>${content}</body></html>`;
 
 const serveHomePage = function (request, response) {
@@ -9,13 +12,27 @@ const serveHomePage = function (request, response) {
   return false;
 };
 
-const serveStockPage = function (request, response) {
-  const { uri } = request;
-  if (uri === '/stock') {
-    response.send(html('Welcome to stock page'));
+const readStock = () => {
+  const stocksReading = JSON.parse(fs.readFileSync('./src/stocks.json', 'utf8'));
+  const stocks = new Stocks();
+  stocksReading.forEach((s) => {
+    stocks.addStock(s.name, s.price, 200);
+  });
+  return stocks;
+}
+const addStock = (stocks) => (request, response) => {
+  request.stocks = stocks;
+  return false;
+}
+
+const serveStockPage = (request, response) => {
+  const { uri, stocks } = request;
+  const stock = uri.slice(1);
+  if (stocks.isListed(stock)) {
+    response.send(stocks.stockDetails(stock));
     return true
   }
   return false;
 };
 
-module.exports = { serveHomePage, serveStockPage };
+module.exports = { addStock, serveHomePage, serveStockPage };
