@@ -1,4 +1,4 @@
-const { serveHomePage, serveStockPage, addStock, readStock } = require('./handlers.js');
+const { serveHomePage } = require('./handlers.js');
 const { notFound } = require('./notFoundHandler.js');
 const { serveFileContent } = require('./serveFileContents.js');
 
@@ -10,7 +10,7 @@ const createReqHandler = handlers => (request, response) => {
   }
 }
 
-const handlers = [addStock(readStock()), serveHomePage, serveFileContent, serveStockPage, notFound];
+const handlers = [serveHomePage, serveFileContent, notFound];
 const reqHandler = createReqHandler(handlers);
 
 module.exports = { reqHandler };
